@@ -19,7 +19,7 @@ import javax.tools.Diagnostic
 import scala.collection.JavaConverters._
 
 @SupportedAnnotationTypes(value = Array {
-  "com.geely.cloud.server.annotation.TimeAnnotation"
+  "com.bob.xxx.annotation.TimeAnnotation"
 })
 class TimeProcessor extends AbstractProcessor with Process {
 
