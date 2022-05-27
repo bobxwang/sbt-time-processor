@@ -1,8 +1,6 @@
 package com.bob.xxx.processor
 
 import com.bob.xxx.annotation.TimeAnnotation
-
-import java.util
 import com.sun.source.util.Trees
 import com.sun.tools.javac.code.{Flags, TypeTag}
 import com.sun.tools.javac.model.JavacElements
@@ -11,6 +9,7 @@ import com.sun.tools.javac.tree.JCTree._
 import com.sun.tools.javac.tree.{JCTree, TreeMaker, TreeTranslator}
 import com.sun.tools.javac.util.{List, Name}
 
+import java.util
 import javax.annotation.processing._
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.{ElementKind, ExecutableElement, TypeElement}
@@ -18,9 +17,6 @@ import javax.lang.model.util.Types
 import javax.tools.Diagnostic
 import scala.collection.JavaConverters._
 
-@SupportedAnnotationTypes(value = Array {
-  "com.bob.xxx.annotation.TimeAnnotation"
-})
 class TimeProcessor extends AbstractProcessor with Process {
 
   private var filer: Filer = _
@@ -206,20 +202,6 @@ class TimeProcessor extends AbstractProcessor with Process {
     maker.Apply(List.nil[JCTree.JCExpression], exp, List.nil[JCTree.JCExpression])
   }
 
-  override def getSupportedSourceVersion: SourceVersion = SourceVersion.latestSupported
-
-  override def init(processingEnv: ProcessingEnvironment): Unit = {
-    super.init(processingEnv)
-
-    env = processingEnv.asInstanceOf[JavacProcessingEnvironment]
-    filer = processingEnv.getFiler
-    messager = processingEnv.getMessager
-    elementUtils = processingEnv.getElementUtils.asInstanceOf[JavacElements]
-    typeUtils = processingEnv.getTypeUtils
-    trees = Trees.instance(processingEnv)
-    treeMaker = TreeMaker.instance(env.getContext)
-  }
-
   /**
     *
     * @param name    自定义的Logger类型私有变量名
@@ -250,5 +232,25 @@ class TimeProcessor extends AbstractProcessor with Process {
     val print = treeMaker.Apply(List.nil[JCTree.JCExpression], printlnExpression, printlnArgs)
     val stmt = treeMaker.Exec(print)
     stmt
+  }
+
+  override def getSupportedSourceVersion: SourceVersion = SourceVersion.latestSupported
+
+  override def init(processingEnv: ProcessingEnvironment): Unit = {
+    super.init(processingEnv)
+
+    env = processingEnv.asInstanceOf[JavacProcessingEnvironment]
+    filer = processingEnv.getFiler
+    messager = processingEnv.getMessager
+    elementUtils = processingEnv.getElementUtils.asInstanceOf[JavacElements]
+    typeUtils = processingEnv.getTypeUtils
+    trees = Trees.instance(processingEnv)
+    treeMaker = TreeMaker.instance(env.getContext)
+  }
+
+  override def getSupportedAnnotationTypes: util.Set[String] = {
+    val s = new util.HashSet[String]()
+    s.add("com.bob.xxx.annotation.TimeAnnotation")
+    s
   }
 }
